@@ -6,34 +6,346 @@
 <title>ゲーム広場</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Orbitron:wght@700;900&family=M+PLUS+1:wght@400;500;700&display=swap');
-:root {
-  --accent: #00e5a0; --accent-dim: #00b87e; --accent-dark: #007a54;
-  --accent-glow: rgba(0,229,160,0.18);
-  --bg: #0d1117; --bg-2: #161b22; --bg-3: #1c2430;
-  --text: #e6edf3; --text-2: #8b949e; --text-3: #484f58;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'M PLUS 1', 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); }
-.header { background: #161b22; padding: 16px 20px; border-bottom: 1px solid rgba(0,229,160,0.35); display: flex; align-items: center; }
-.logo { font-family: 'Orbitron', monospace; font-size: 20px; color: #00e5a0; text-shadow: 0 0 14px rgba(0,229,160,0.18); }
-.logo em { color: #ffb300; font-style: normal; }
-.main { max-width: 900px; margin: 40px auto; padding: 20px; text-align: center; }
-.coming-soon { font-size: 24px; font-weight: 700; color: #e6edf3; margin-bottom: 16px; }
-.desc { color: #8b949e; font-size: 15px; line-height: 1.8; }
-.badge { display: inline-flex; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; margin: 4px; background: rgba(0,229,160,0.15); color: #00e5a0; border: 1px solid rgba(0,229,160,0.3); }
+:root{--accent:#00e5a0;--accent-dim:#00b87e;--bg:#0d1117;--bg-2:#161b22;--surface:#1f2937;--card:#1a2332;--text:#e6edf3;--text-2:#8b949e;--text-3:#484f58;--border:rgba(255,255,255,0.07);--border-2:rgba(255,255,255,0.13);--border-accent:rgba(0,229,160,0.35);--amber:#ffb300;--blue:#4da6ff;--red:#ff4757;--purple:#a855f7;--accent-glow:rgba(0,229,160,0.18);--amber-glow:rgba(255,179,0,0.15);--blue-glow:rgba(77,166,255,0.15);--amber-light:rgba(255,179,0,0.12);--blue-light:rgba(77,166,255,0.12);--purple-light:rgba(168,85,247,0.12);--green-light:rgba(0,229,160,0.12);--green-dark:#00b87e;--gray-100:#263040;--gray-600:#8b949e;--white:var(--card);--radius:8px;--radius-lg:12px;--radius-xl:18px;--shadow:0 2px 12px rgba(0,0,0,0.4);}
+*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'M PLUS 1','Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;}
+.app{display:flex;flex-direction:column;height:100vh;}.topbar{background:var(--bg-2);border-bottom:1px solid var(--border-accent);padding:0 20px;display:flex;align-items:center;height:54px;flex-shrink:0;position:sticky;top:0;z-index:100;}.main{flex:1;overflow-y:auto;}.page{display:none;}.page.active{display:block;}.page-inner{max-width:1080px;margin:0 auto;padding:20px;}
+.logo{font-family:'Orbitron',monospace;font-size:17px;font-weight:900;color:var(--accent);letter-spacing:1px;margin-right:24px;text-shadow:0 0 14px var(--accent-glow);}.logo em{color:var(--amber);font-style:normal;}
+.nav{display:flex;height:100%;flex:1;gap:0;overflow-x:auto;}.nav-item{display:flex;align-items:center;gap:7px;padding:0 14px;font-size:13px;cursor:pointer;border-bottom:2.5px solid transparent;color:var(--text-2);white-space:nowrap;transition:color 0.15s;height:100%;}.nav-item:hover{color:var(--text);}.nav-item.active{border-bottom-color:var(--accent);color:var(--accent);font-weight:700;}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}.avatar-btn{width:34px;height:34px;border-radius:6px;background:rgba(0,229,160,0.18);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;cursor:pointer;border:1.5px solid #00b87e;font-family:'Orbitron',monospace;}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--radius);font-size:13px;font-family:inherit;cursor:pointer;border:1px solid var(--border-2);background:var(--surface);color:var(--text);transition:all 0.15s;font-weight:500;}
+.btn-sm{padding:5px 11px;font-size:12px;}.btn-xs{padding:3px 8px;font-size:11px;}
+.btn-green{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:700;}.btn-amber{background:var(--amber);color:var(--bg);border-color:var(--amber);font-weight:700;}.btn-blue{background:var(--blue);color:var(--bg);border-color:var(--blue);font-weight:700;}.btn-ghost{border-color:transparent;background:transparent;color:var(--text-2);}.btn-outline-green{border-color:#00b87e;color:var(--accent);background:var(--green-light);}
+.card{background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow);}.card-title{font-size:14px;font-weight:700;margin-bottom:14px;}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;}.badge-green{background:rgba(0,229,160,0.15);color:var(--accent);border:1px solid rgba(0,229,160,0.3);}.badge-amber{background:rgba(255,179,0,0.15);color:var(--amber);border:1px solid rgba(255,179,0,0.3);}.badge-blue{background:rgba(77,166,255,0.15);color:var(--blue);border:1px solid rgba(77,166,255,0.3);}.badge-red{background:rgba(255,71,87,0.15);color:var(--red);border:1px solid rgba(255,71,87,0.3);}.badge-purple{background:rgba(168,85,247,0.15);color:var(--purple);border:1px solid rgba(168,85,247,0.3);}.badge-gray{background:var(--surface);color:var(--text-2);border:1px solid var(--border-2);}
+.plat{display:inline-flex;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;}.plat-steam{background:#1b2838;color:#66c0f4;border:1px solid #2a475e;}.plat-ps{background:#003791;color:#fff;}.plat-switch{background:#E4000F;color:#fff;}.plat-xbox{background:#107C10;color:#fff;}.plat-mobile{background:#333;color:#aaa;border:1px solid #555;}.plat-free{background:#0d3d70;color:var(--blue);border:1px solid rgba(77,166,255,0.3);}
+.stars{display:inline-flex;gap:1px;}.star{font-size:12px;color:var(--amber);}.star.off{color:var(--text-3);}
+.chip{padding:5px 12px;border-radius:6px;border:1px solid var(--border-2);font-size:12px;cursor:pointer;color:var(--text-2);background:var(--surface);transition:all 0.15s;}.chip.sel{background:rgba(0,229,160,0.18);border-color:#00b87e;color:var(--accent);font-weight:700;}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}.modal-bg.open{display:flex;}.modal-box{background:var(--bg-2);border:1px solid var(--border-accent);border-radius:var(--radius-xl);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;}.modal-head{padding:16px 20px;border-bottom:1px solid var(--border-2);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg-2);z-index:1;border-radius:var(--radius-xl) var(--radius-xl) 0 0;}.modal-head-title{font-size:15px;font-weight:700;color:var(--accent);}.modal-body{padding:20px;}
+.form-row{margin-bottom:14px;}.form-row label{display:block;font-size:12px;color:var(--text-2);margin-bottom:4px;font-weight:500;}.form-row input,.form-row select,.form-row textarea{width:100%;padding:9px 12px;border:1px solid var(--border-2);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--text);font-family:inherit;}.form-row textarea{min-height:80px;resize:vertical;}
+.filter-bar{background:var(--bg-2);border:1px solid var(--border-2);border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.games-layout{display:grid;grid-template-columns:1fr 260px;gap:16px;}.game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.game-card{background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:transform 0.12s,border-color 0.15s,box-shadow 0.15s;box-shadow:var(--shadow);}.game-card:hover{transform:translateY(-3px);border-color:#00b87e;box-shadow:0 6px 24px rgba(0,0,0,0.5);}.game-thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:40px;}.game-body{padding:12px;}.game-title{font-size:14px;font-weight:700;margin-bottom:4px;}.game-desc{font-size:12px;color:var(--text-2);line-height:1.5;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}.game-footer{display:flex;align-items:center;justify-content:space-between;}
+.rec-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.4s infinite;}.rank-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);}.rank-num{font-size:14px;font-weight:700;width:22px;color:var(--text-3);font-family:'Orbitron',monospace;}.rank-num.gold{color:var(--amber);}.rank-info{flex:1;min-width:0;}.rank-title{font-size:12px;font-weight:500;}.rank-score{font-size:11px;color:var(--amber);}
+.tc-card{background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:transform 0.12s,border-color 0.15s;box-shadow:var(--shadow);}.tc-card:hover{transform:translateY(-2px);border-color:#e59c00;}.tc-card.featured{border:1.5px solid var(--amber);}.tc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:20px;}.tc-head{padding:13px 14px 10px;border-bottom:1px solid var(--border);}.tc-title{font-size:14px;font-weight:700;}.tc-body{padding:10px 14px;}.tc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;}.tc-stat{text-align:center;padding:6px 4px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);}.tc-stat-val{font-size:16px;font-weight:700;font-family:'Orbitron',monospace;}.tc-stat-lab{font-size:10px;color:var(--text-3);}.tc-foot{padding:8px 14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;}
+.progress-wrap{background:var(--surface);border-radius:4px;height:5px;overflow:hidden;}.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:4px;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.profile-layout{display:grid;grid-template-columns:250px 1fr;gap:16px;}.profile-card{background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius-lg);overflow:hidden;}.profile-av{width:48px;height:48px;border-radius:8px;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;font-family:'Orbitron',monospace;}.profile-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:0 -14px 12px;}.profile-stat{padding:9px 0;text-align:center;cursor:pointer;}.profile-stat-val{font-size:16px;font-weight:700;color:var(--accent);font-family:'Orbitron',monospace;}.profile-stat-lab{font-size:10px;color:var(--text-3);}
+.notif-item{display:flex;gap:12px;padding:14px;background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius-lg);margin-bottom:8px;}.notif-item.unread{border-left:3px solid var(--accent);}
+.detail-panel-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:400;backdrop-filter:blur(3px);}.detail-panel-bg.open{display:block;}.detail-panel{position:fixed;right:0;top:0;bottom:0;width:min(600px,100vw);background:var(--bg-2);border-left:1px solid var(--border-accent);z-index:401;overflow-y:auto;transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);}.detail-panel.open{transform:translateX(0);}
+.dp-hero{width:100%;height:140px;display:flex;align-items:center;justify-content:center;font-size:60px;position:relative;}.dp-close{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.6);border:1px solid var(--border-2);color:var(--text-2);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;z-index:5;}
+.dp-inner-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px;}.dp-tab{padding:9px 14px;font-size:13px;cursor:pointer;border-bottom:2.5px solid transparent;color:var(--text-2);}.dp-tab.active{border-bottom-color:var(--accent);color:var(--accent);font-weight:700;}.dp-tab.blue.active{border-bottom-color:var(--blue);color:var(--blue);}.dp-tab.amber.active{border-bottom-color:var(--amber);color:var(--amber);}
+.sec-label{font-size:11px;font-weight:700;color:var(--text-3);letter-spacing:1px;margin-bottom:10px;text-transform:uppercase;}
+.notice{padding:10px 12px;border-radius:var(--radius);font-size:12px;line-height:1.6;}.notice-amber{background:rgba(255,179,0,0.1);color:var(--amber);border:1px solid rgba(255,179,0,0.3);}.notice-green{background:rgba(0,229,160,0.18);color:var(--accent);border:1px solid var(--border-accent);}
+.recruit-card{background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius-lg);padding:14px;cursor:pointer;box-shadow:var(--shadow);margin-bottom:10px;}
+.alumni-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface);border-radius:var(--radius);margin-bottom:6px;border:1px solid var(--border);}.alumav{width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;font-family:'Orbitron',monospace;}
+.star-pick{display:flex;gap:4px;cursor:pointer;}.star-pick span{font-size:22px;color:var(--text-3);transition:color 0.1s;}.star-pick span.lit{color:var(--amber);}
+.invite-link-box{flex:1;padding:9px 12px;background:var(--surface);border:1px solid var(--border-2);border-radius:var(--radius);font-size:12px;color:var(--accent);font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.inv-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}.inv-stat{text-align:center;padding:12px 8px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border-2);}.inv-stat-val{font-size:22px;font-weight:700;color:var(--accent);font-family:'Orbitron',monospace;}.inv-stat-lab{font-size:10px;color:var(--text-3);}
+.rtag{display:inline-flex;padding:2px 7px;border-radius:4px;font-size:11px;margin:2px;font-weight:500;}.rtag-mode{background:rgba(77,166,255,0.12);color:var(--blue);border:1px solid rgba(77,166,255,0.25);}.rtag-time{background:rgba(255,179,0,0.12);color:var(--amber);border:1px solid rgba(255,179,0,0.25);}.rtag-vc{background:rgba(168,85,247,0.12);color:var(--purple);border:1px solid rgba(168,85,247,0.25);}.rtag-level{background:rgba(0,229,160,0.18);color:var(--accent);}
+.comment-item{padding:10px;background:var(--surface);border-radius:var(--radius);margin-bottom:8px;border:1px solid var(--border);}.comment-user{font-size:12px;font-weight:700;color:var(--accent);}.comment-text{font-size:13px;color:var(--text-2);margin-top:3px;}
+.etag{padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:1px solid var(--border-2);color:var(--text-2);background:var(--surface);}.etag.kami{background:rgba(255,179,0,0.12);border-color:#e59c00;color:var(--amber);font-weight:700;}.etag.ryosaku{background:rgba(0,229,160,0.18);border-color:#00b87e;color:var(--accent);font-weight:700;}.etag.jirai{background:rgba(255,71,87,0.12);border-color:#c0392b;color:var(--red);font-weight:700;}
+.entry-item{display:flex;align-items:center;gap:10px;padding:7px 9px;background:var(--surface);border-radius:var(--radius);margin-bottom:6px;border:1px solid var(--border);}.entry-rank{font-size:12px;font-weight:700;width:20px;color:var(--text-3);font-family:'Orbitron',monospace;}.entry-rank.g{color:var(--amber);}.entry-av{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Orbitron',monospace;}
+.prize-row{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:var(--radius);margin-bottom:5px;font-size:13px;font-weight:500;}.prize-1{background:rgba(255,179,0,0.12);color:var(--amber);border:1px solid rgba(255,179,0,0.25);}.prize-2{background:var(--surface);color:var(--text-2);border:1px solid var(--border-2);}
+.sched-item{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--border);align-items:flex-start;}.sched-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;}.dot-done{background:var(--accent);}.dot-now{background:var(--amber);}.dot-next{background:var(--surface-2);border:1px solid var(--border-2);}.sched-date{font-size:11px;color:var(--text-3);width:60px;flex-shrink:0;}
 </style>
-</head>
-<body>
-<div class="header"><div class="logo">ゲーム<em>広場</em></div></div>
-<div class="main">
-<div class="coming-soon">🎮 フルバージョン準備中</div>
-<p class="desc">全プラットフォーム対応のゲームコミュニティサイト<br>ゲーム評価・マルチ募集・大会開催がすべて揃う場所</p>
-<br><div>
-<span class="badge">ゲーム評価</span>
-<span class="badge">マルチ募集</span>
-<span class="badge">大会開催</span>
-<span class="badge">フレンド機能</span>
+<div class="app">
+  <div class="topbar">
+    <div class="logo">ゲーム<em>広場</em></div>
+    <nav class="nav">
+      <div class="nav-item active" onclick="nav(this,'games')">ゲーム一覧</div>
+      <div class="nav-item" onclick="nav(this,'recruit')">マルチ募集</div>
+      <div class="nav-item" onclick="nav(this,'tournament')">大会</div>
+      <div class="nav-item" onclick="nav(this,'profile')">プロフィール</div>
+      <div class="nav-item" onclick="nav(this,'notifications')">通知</div>
+      <div class="nav-item" onclick="nav(this,'invite')">招待</div>
+    </nav>
+    <div class="topbar-right">
+      <div class="notif-btn" onclick="nav(document.querySelectorAll('.nav-item')[4],'notifications')">🔔<div class="notif-pip" style="width:7px;height:7px;background:var(--red);border-radius:50%;position:absolute;top:2px;right:2px;"></div></div>
+      <div class="avatar-btn" onclick="nav(document.querySelectorAll('.nav-item')[3],'profile')">あ</div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="page active" id="page-games"><div class="page-inner">
+      <div class="filter-bar">
+        <span style="font-size:12px;color:var(--text-3)">プラットフォーム:</span>
+        <div class="chip sel" onclick="filterChip(this,'plat','all')">すべて</div>
+        <div class="chip" onclick="filterChip(this,'plat','Steam')">Steam</div>
+        <div class="chip" onclick="filterChip(this,'plat','PS')">PS5</div>
+        <div class="chip" onclick="filterChip(this,'plat','Switch')">Switch</div>
+        <div class="chip" onclick="filterChip(this,'plat','Free')">基本無料</div>
+        <span style="font-size:12px;color:var(--text-3);margin-left:8px">ジャンル:</span>
+        <div class="chip sel" onclick="filterChip(this,'genre','all')">すべて</div>
+        <div class="chip" onclick="filterChip(this,'genre','RPG')">RPG</div>
+        <div class="chip" onclick="filterChip(this,'genre','FPS')">FPS</div>
+        <div class="chip" onclick="filterChip(this,'genre','インディー')">インディー</div>
+        <div class="chip" onclick="filterChip(this,'genre','アクション')">アクション</div>
+        <div style="margin-left:auto"><button class="btn btn-green btn-sm" onclick="openModal('addGameModal')">+ ゲームを投稿</button></div>
+      </div>
+      <div class="games-layout"><div><div class="game-grid" id="gameGrid"></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card"><div class="card-title">高評価ランキング</div><div id="rankList"></div></div>
+        <div class="card"><div class="card-title">アクティブな募集</div><div id="sidebarRecruits"></div></div>
+      </div></div>
+    </div></div>
+    <div class="page" id="page-recruit"><div class="page-inner">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div><div style="font-size:17px;font-weight:700">マルチ募集板</div><div style="font-size:12px;color:var(--text-3)">全プラットフォームのマルチ募集が集まる場所</div></div><button class="btn btn-blue" onclick="openModal('addRecruitModal')">+ 募集を投稿する</button></div>
+      <div class="filter-bar"><span style="font-size:12px;color:var(--text-3)">ゲーム:</span><div class="chip sel" onclick="filterChip(this,'rGame','all')">すべて</div><div class="chip" onclick="filterChip(this,'rGame','Apex Legends')">Apex</div><div class="chip" onclick="filterChip(this,'rGame','モンスターハンターワイルズ')">モンハン</div></div>
+      <div id="recruitList"></div>
+    </div></div>
+    <div class="page" id="page-tournament"><div class="page-inner">
+      <div id="tournamentListView">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div><div style="font-size:17px;font-weight:700">大会</div><div style="font-size:12px;color:var(--text-3)">誰でも気軽に市民大会を開ける</div></div><button class="btn btn-amber" onclick="openModal('createTournamentModal')">+ 大会を開催する</button></div>
+        <div class="sec-label">募集中</div><div class="tc-grid" id="tcGrid"></div>
+        <div class="sec-label">進行中</div><div class="tc-grid" id="tcOngoing"></div>
+      </div>
+      <div id="tournamentDetailView" style="display:none"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer" onclick="hideTournamentDetail()"><span style="font-size:13px;color:var(--text-2)">← 大会一覧に戻る</span></div><div id="tournamentDetailContent"></div></div>
+    </div></div>
+    <div class="page" id="page-profile"><div class="page-inner">
+      <div class="profile-layout">
+        <div>
+          <div class="profile-card" style="margin-bottom:12px">
+            <div style="height:68px;background:#1a2a1a"></div>
+            <div style="padding:0 14px;margin-top:-20px;display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:10px">
+              <div class="profile-av" style="background:rgba(0,229,160,0.12);color:#00b87e">あ</div>
+              <button class="btn btn-sm" style="background:transparent;border-color:transparent;color:var(--text-2)">編集</button>
+            </div>
+            <div style="padding:0 14px 14px">
+              <div style="font-size:15px;font-weight:700">あなた</div>
+              <div style="font-size:12px;color:var(--text-3);margin-bottom:6px">@gamer_you · 成田市</div>
+              <div style="font-size:12px;color:var(--text-2);margin-bottom:10px">インディーゲームと協力プレイが好き。大会では初心者～中級者帯で活動中。</div>
+              <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">
+                <span class="badge badge-amber">大会優勝</span>
+                <span class="badge badge-green">常連参加者</span>
+                <span class="badge badge-blue">コメント職人</span>
+              </div>
+              <div class="profile-stat-row">
+                <div class="profile-stat"><div class="profile-stat-val">12</div><div class="profile-stat-lab">フォロワー</div></div>
+                <div class="profile-stat"><div class="profile-stat-val">8</div><div class="profile-stat-lab">フォロー中</div></div>
+                <div class="profile-stat"><div class="profile-stat-val">5</div><div class="profile-stat-lab">大会参加</div></div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-green" style="width:100%;justify-content:center;margin-bottom:12px" onclick="alert('AIマッチング機能')">AIで相性の良いプレイヤーを探す</button>
+          <div class="card"><div class="card-title">大会同窓生</div>
+            <div class="alumni-item"><div class="alumav" style="background:rgba(77,166,255,0.12);color:#0a3d6b">K</div><div style="flex:1"><div style="font-size:13px;font-weight:500">ゲーマーK</div><div style="font-size:11px;color:var(--text-3)">HKタイムアタック大会で同期</div></div><span style="font-size:11px;color:#00b87e">フォロー中</span></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="card"><div class="card-title">実績・バッジ</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div style="display:flex;gap:10px;align-items:flex-start;padding:9px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border)"><div style="font-size:20px">🏆</div><div><div style="font-size:12px;font-weight:700">大会初優勝</div><div style="font-size:11px;color:var(--text-2)">HKタイムアタック大会</div><div style="font-size:10px;color:var(--text-3)">2026年3月</div></div></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;padding:9px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border)"><div style="font-size:20px">🎯</div><div><div style="font-size:12px;font-weight:700">5大会連続参加</div><div style="font-size:11px;color:var(--text-2)">癨6勤賞</div><div style="font-size:10px;color:var(--text-3)">2026年4月</div></div></div>
+            </div></div>
+          <div class="card"><div class="card-title">大会参加履歴</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px;background:var(--surface);border-radius:var(--radius);margin-bottom:7px;border:1px solid var(--border)"><div style="width:40px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'Orbitron',monospace;background:rgba(255,179,0,0.15);color:var(--amber);border:1px solid rgba(255,179,0,0.3)">優勝</div><div style="font-size:20px">🦋</div><div style="flex:1"><div style="font-size:12px;font-weight:700">第2回 HKタイムアタック大会</div><div style="font-size:11px;color:var(--text-3)">Hollow Knight ・ 16人 ・ 2026年3月</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+    <div class="page" id="page-notifications"><div class="page-inner" style="max-width:680px">
+      <div style="font-size:17px;font-weight:700;margin-bottom:14px">通知</div>
+      <div class="notif-item unread"><div style="width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;background:rgba(0,229,160,0.12)">🏆</div><div style="flex:1"><div style="font-size:13px">第3回 HKタイムアタック大会のエントリーが確認されました。開催まであと<strong>33日</strong>です。</div><div style="font-size:11px;color:var(--text-3)">5分前</div></div></div>
+      <div class="notif-item unread"><div style="width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;background:rgba(77,166,255,0.12)">👤</div><div style="flex:1"><div style="font-size:13px"><strong>ゲーマーK</strong>さんがあなたをフォローしました。</div><div style="font-size:11px;color:var(--text-3)">1時間前</div><div style="margin-top:8px"><button class="btn btn-xs btn-outline-green" onclick="doFollow(this)">フォローバック</button></div></div></div>
+    </div></div>
+    <div class="page" id="page-invite"><div class="page-inner" style="max-width:680px">
+      <div style="font-size:17px;font-weight:700;margin-bottom:14px">招待する</div>
+      <div class="card" style="margin-bottom:12px"><div class="card-title">マイ招待リンク</div>
+        <div style="display:flex;gap:8px;margin-bottom:4px"><div class="invite-link-box">gamehiroba.jp/invite/gamer_you_abc123</div><button class="btn btn-green btn-sm" onclick="copyLink('cp1')">コピー</button></div>
+        <div id="cp1" style="display:none;font-size:11px;color:var(--accent)">コピーしました ✓</div>
+      </div>
+      <div class="card"><div class="card-title">招待の実績</div>
+        <div class="inv-stats"><div class="inv-stat"><div class="inv-stat-val">3</div><div class="inv-stat-lab">招待した人数</div></div><div class="inv-stat"><div class="inv-stat-val">2</div><div class="inv-stat-lab">大会参加者</div></div><div class="inv-stat"><div class="inv-stat-val">1</div><div class="inv-stat-lab">獲得バッジ</div></div></div>
+      </div>
+    </div></div>
+  </div>
 </div>
+<div class="detail-panel-bg" id="dpBg" onclick="closeDetailPanel()"></div>
+<div class="detail-panel" id="detailPanel">
+  <button class="dp-close" onclick="closeDetailPanel()">✕</button>
+  <div class="dp-hero" id="dpHero"></div>
+  <div style="padding:16px 20px">
+    <div class="dp-inner-tabs" id="dpTabs"></div>
+    <div id="dpContent"></div>
+  </div>
 </div>
+<div class="modal-bg" id="addGameModal"><div class="modal-box">
+  <div class="modal-head"><div class="modal-head-title">ゲームを投稿する</div><button class="btn btn-xs" style="background:transparent" onclick="closeModal('addGameModal')">✕</button></div>
+  <div class="modal-body">
+    <div class="form-row"><label>ゲームタイトル *</label><input id="fTitle" type="text" placeholder="例：Elden Ring"></div>
+    <div class="form-row"><label>ジャンル *</label><select id="fGenre"><option>RPG</option><option>FPS</option><option>アクション</option><option>インディー</option><option>シミュレーション</option><option>その他</option></select></div>
+    <div class="form-row"><label>プラットフォーム *</label><div style="display:flex;gap:6px;flex-wrap:wrap">
+      <div class="chip" onclick="this.classList.toggle('sel')" data-plat="Steam">Steam</div>
+      <div class="chip" onclick="this.classList.toggle('sel')" data-plat="PS">PS5/PS4</div>
+      <div class="chip" onclick="this.classList.toggle('sel')" data-plat="Switch">Switch</div>
+      <div class="chip" onclick="this.classList.toggle('sel')" data-plat="Xbox">Xbox</div>
+      <div class="chip" onclick="this.classList.toggle('sel')" data-plat="Free">基本無料</div>
+    </div></div>
+    <div class="form-row"><label>紹介文</label><textarea id="fDesc" placeholder="このゲームの魅力を..."></textarea></div>
+    <div class="form-row"><label>あなたの評価</label><div class="star-pick" id="addStars"><span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span></div></div>
+    <div class="form-row"><label>評価タグ</label><div style="display:flex;gap:6px;flex-wrap:wrap">
+      <div class="etag" data-v="神ゲー" onclick="selEtag(this,'kami')">神ゲー</div>
+      <div class="etag" data-v="良作" onclick="selEtag(this,'ryosaku')">良作</div>
+      <div class="etag" data-v="人を選ぶ" onclick="selEtag(this,'hitowoerabu')">人を選ぶ</div>
+      <div class="etag" data-v="地雷" onclick="selEtag(this,'jirai')">地雷</div>
+    </div></div>
+    <div class="form-row"><label>プレイスタイルタグ</label><div style="display:flex;gap:6px;flex-wrap:wrap">
+      <div class="chip" onclick="this.classList.toggle('sel')">ソロ向け</div>
+      <div class="chip" onclick="this.classList.toggle('sel')">協力プレイ</div>
+      <div class="chip" onclick="this.classList.toggle('sel')">作業中に合う</div>
+      <div class="chip" onclick="this.classList.toggle('sel')">決め時がない</div>
+      <div class="chip" onclick="this.classList.toggle('sel')">決め時がない</div>
+    </div></div>
+    <button class="btn btn-green" style="width:100%;justify-content:center" onclick="submitGame()">投稿する</button>
+  </div>
+</div></div>
+<div class="modal-bg" id="addRecruitModal"><div class="modal-box">
+  <div class="modal-head"><div class="modal-head-title">マルチ募集を投稿する</div><button class="btn btn-xs" style="background:transparent" onclick="closeModal('addRecruitModal')">✕</button></div>
+  <div class="modal-body">
+    <div class="form-row"><label>ゲーム *</label><select id="rGame"></select></div>
+    <div class="form-row"><label>募集タイトル *</label><input id="rTitle" type="text" placeholder="例：初心者歓迎！一緒にランク上げませんか"></div>
+    <div class="form-row"><label>募集人数</label><div style="display:flex;align-items:center;gap:8px"><select id="rCur" style="width:70px"><option>1</option><option>2</option></select><span>人参加中 /</span><select id="rMax" style="width:70px"><option>2</option><option>3</option><option>4</option></select><span>人まで</span></div></div>
+    <div class="form-row"><label>コメント</label><textarea id="rComment" placeholder="どんな感じで遅びたいか..."></textarea></div>
+    <button class="btn btn-blue" style="width:100%;justify-content:center" onclick="submitRecruit()">投稿する</button>
+  </div>
+</div></div>
+<div class="modal-bg" id="createTournamentModal"><div class="modal-box">
+  <div class="modal-head"><div class="modal-head-title">大会を開催する</div><button class="btn btn-xs" style="background:transparent" onclick="closeModal('createTournamentModal')">✕</button></div>
+  <div class="modal-body">
+    <div class="form-row"><label>大会タイトル *</label><input id="tTitle" type="text" placeholder="例：第1回 ○○市民Apexカップ"></div>
+    <div class="form-row"><label>ゲーム *</label><select id="tGame"></select></div>
+    <div class="form-row"><label>定員</label><input type="number" value="16" id="tCap"></div>
+    <div class="form-row"><label>賞品（任意）</label><input type="text" id="tPrize1" placeholder="優勝: 例 Amazonギフト券 3000円"></div>
+    <div class="form-row"><label>説明・ルール</label><textarea id="tDesc" placeholder="どんな大会か、ルールなど..."></textarea></div>
+    <button class="btn btn-amber" style="width:100%;justify-content:center" onclick="submitTournament()">大会を公開する</button>
+  </div>
+</div></div>
+<script>
+const G=[
+  {id:1,title:'Hollow Knight',genre:'インディー',plats:['Steam','Switch'],desc:'虫たちが支配する崩壊した王国を探索する美麗な2Dアクション。高難易度ながら達成感が凄まじい。',score:4.8,reviews:342,evalTag:'神ゲー',vibes:['ソロ向け','決め時がない'],emoji:'🦋',bg:'#1a2a1a',comments:[{user:'ゲーマーK',score:5,text:'ラスボスまでの旅が最高すぎた。BGMが頭から離れない。'}]},
+  {id:2,title:'Balatro',genre:'インディー',plats:['Steam','Switch'],desc:'トランプのポーカーとローグライクが融合した中毒性異常のデッキ構築ゲーム。一度始めると止まらない。',score:4.9,reviews:521,evalTag:'神ゲー',vibes:['ソロ向け','決め時がない'],emoji:'🃃',bg:'#1e1030',comments:[{user:'カードゲーム廃人',score:5,text:'最高です。'}]},
+  {id:3,title:'モンスターハンターワイルズ',genre:'アクション',plats:['Steam','PS','Xbox'],desc:'シリーズ最新作。友人と遙ぶと倍楽しい。',score:4.6,reviews:1203,evalTag:'良作',vibes:['協力プレイ','決め時がない'],emoji:'⚔️',bg:'#2a1810',comments:[{user:'ハンター歴年10年',score:4,text:'グラフィックに感動。'}]},
+  {id:4,title:'Stardew Valley',genre:'シミュレーション',plats:['Steam','Switch'],desc:'農場経営と村人との交流が楽しいほのぼのゲーム。',score:4.7,reviews:892,evalTag:'神ゲー',vibes:['ソロ向け','作業中に合う'],emoji:'🌾',bg:'#1a2810',comments:[]},
+  {id:5,title:'Apex Legends',genre:'FPS',plats:['Steam','PS','Free'],desc:'スピード感あふれる動きが特徴のバトロFPS。',score:3.9,reviews:2100,evalTag:'人を選ぶ',vibes:['協力プレイ','無課金OK'],emoji:'🎯',bg:'#1a0a20',comments:[]},
+  {id:6,title:'Dave the Diver',genre:'インディー',plats:['Steam','Switch'],desc:'昼は海でダイビング、夜は寿司屋を経営。謎の組み合わせが神がかってる。',score:4.5,reviews:287,evalTag:'良作',vibes:['ソロ向け','初心者歓迎'],emoji:'🤿',bg:'#0a1a2a',comments:[]},
+];
+const R=[
+  {id:1,gameId:5,title:'ランクマ一緒に上がりましょう！ダイヤ〜マスター帯',modes:['ランク'],time:['今すぐ'],vc:'Discord必須',comment:'ダイヤ帯です。',cur:2,max:3,user:'ApexFarmer',ago:'3分前'},
+  {id:2,gameId:3,title:'モンハン初心者パーティ！下位〜上位クエスト消化',modes:['カジュアル'],time:['夜 (21～24時)'],vc:'あれば歓迎',comment:'初心者大歓迎。丁寧に教えます。',cur:1,max:4,user:'ハンターK',ago:'15分前'},
+];
+const T=[
+  {id:1,gameId:1,title:'第3回 成田こどもHKタイムアタック大会',featured:true,status:'open',format:'タイムアタック',entries:8,cap:16,date:'2026年5月25日',org:'キッズスポーツ研究所',prizes:['Amazonギフト券 3,000円','Amazonギフト券 1,000円','称号バッジ「猛者」'],desc:'Hollow Knightの特定エリアをいかに早くクリアできるかを競うタイムアタック大会。'},
+  {id:2,gameId:5,title:'千葉エリア Apex 草の根大会 vol.2',featured:false,status:'open',format:'3人チーム戦',entries:6,cap:12,date:'2026年6月1日',org:'ちばFPSコミュ',prizes:['称号バッジ「頂点」','',''],desc:'千葉エリアのApexプレイヤーが集まる大会。'},
+  {id:3,gameId:2,title:'バラトロ最高スコア選手権 5月',featured:false,status:'open',format:'スコアアタック',entries:14,cap:32,date:'2026年5月31日',org:'バラトロ廃人の会',prizes:['Steamギフトカード 2,000円','Steamギフトカード 1,000円',''],desc:'期間中に達成した最高スコアを提出する形式。'},
+];
+let filterPlat='all',filterGenre='all',filterRGame='all';
+let addStarValG=0,activeEvalG='',activeEvalClassG='';
+function starsHtml(s,sz){sz=sz||12;let h='';for(let i=1;i<=5;i++)h+='<span class="star'+(i>s?' off':'')+'" style="font-size:'+sz+'px">★</span>';return h;}
+function evalCls(t){return{'神ゲー':'amber','良作':'green','人を選ぶ':'blue','地雷':'red'}[t]||'gray';}
+function platBadge(p){var m={Steam:'plat-steam',PS:'plat-ps',Switch:'plat-switch',Xbox:'plat-xbox',Free:'plat-free'},l={Steam:'Steam',PS:'PS5',Switch:'Switch',Xbox:'Xbox',Free:'F2P'};return '<span class="plat '+(m[p]||'')+'">'+l[p]+'</span>';}
+function renderGames(){
+  var recCounts={};R.forEach(function(r){recCounts[r.gameId]=(recCounts[r.gameId]||0)+1;});
+  var list=G.slice();
+  if(filterPlat!=='all')list=list.filter(function(g){return g.plats.indexOf(filterPlat)>=0;});
+  if(filterGenre!=='all')list=list.filter(function(g){return g.genre===filterGenre;});
+  document.getElementById('gameGrid').innerHTML=list.map(function(g){
+    return '<div class="game-card" onclick="openGameDetail('+g.id+')">'+'<div class="game-thumb" style="background:'+g.bg+'">'+g.emoji+'</div>'+'<div class="game-body">'+'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px">'+g.plats.map(platBadge).join('')+'</div>'+'<div class="game-title">'+g.title+'</div>'+'<div class="game-desc">'+g.desc+'</div>'+'<div class="game-footer"><div>'+starsHtml(g.score)+'<span style="font-size:12px;font-weight:700;color:var(--amber)">'+g.score.toFixed(1)+'</span><span style="font-size:11px;color:var(--text-3)"> ('+g.reviews+'件)</span></div><span class="badge badge-'+evalCls(g.evalTag)+'">'+g.evalTag+'</span></div>'+(recCounts[g.id]?'<div style="font-size:11px;color:var(--blue);display:flex;align-items:center;gap:4px;margin-top:7px"><span class="rec-dot"></span>募集'+recCounts[g.id]+'件</div>':'')+'</div></div>';
+  }).join('');
+  var sorted=G.slice().sort(function(a,b){return b.score-a.score;});
+  document.getElementById('rankList').innerHTML=sorted.slice(0,5).map(function(g,i){
+    return '<div class="rank-item"><span class="rank-num'+(i===0?' gold':i===1?' silver':i===2?' bronze':'')+'">'+(i+1)+'</span><div class="rank-info"><div class="rank-title">'+g.title+'</div><div class="rank-score">★ '+g.score.toFixed(1)+'</div></div></div>';
+  }).join('');
+  var gMap={};G.forEach(function(g){gMap[g.id]=g;});
+  document.getElementById('sidebarRecruits').innerHTML=R.slice(0,3).map(function(r){
+    var g=gMap[r.gameId];
+    return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)"><div style="font-size:16px">'+(g?g.emoji:'🎮')+'</div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+r.title+'</div><div style="font-size:10px;color:var(--text-3)">空き'+(r.max-r.cur)+'枠 · '+r.ago+'</div></div></div>';
+  }).join('');
+}
+function renderRecruits(){
+  var gMap={};G.forEach(function(g){gMap[g.id]=g;});
+  var list=R.slice();
+  if(filterRGame!=='all')list=list.filter(function(r){var g=gMap[r.gameId];return g&&g.title===filterRGame;});
+  document.getElementById('recruitList').innerHTML=list.map(function(r){
+    var g=gMap[r.gameId];
+    return '<div class="recruit-card" onclick="openGameDetail('+r.gameId+',\'recruit\')"><div style="display:flex;gap:10px;margin-bottom:10px"><div style="width:42px;height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;background:'+(g?g.bg:'#222')+'">'+(g?g.emoji:'🎮')+'</div><div style="flex:1"><div style="font-size:11px;color:var(--text-3)">'+((g&&g.title)||'')+'</div><div style="font-size:14px;font-weight:700">'+r.title+'</div></div></div><div style="margin-bottom:8px">'+r.modes.map(function(m){return '<span class="rtag rtag-mode">'+m+'</span>';}).join('')+r.time.map(function(t){return '<span class="rtag rtag-time">'+t+'</span>';}).join('')+'<span class="rtag rtag-vc">'+r.vc+'</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--border)"><div style="font-size:12px;color:var(--text-2)">空き <strong style="color:var(--blue)">'+(r.max-r.cur)+'枠</strong> ('+r.cur+'/'+r.max+'人)</div><div style="font-size:11px;color:var(--text-3)">'+r.user+' · '+r.ago+'</div></div></div>';
+  }).join('')||'<div style="padding:40px;text-align:center;color:var(--text-3)">募集がありません</div>';
+}
+function renderTournaments(){
+  var gMap={};G.forEach(function(g){gMap[g.id]=g;});
+  function renderCard(tc){
+    var g=gMap[tc.gameId];
+    var pct=Math.round(tc.entries/tc.cap*100);
+    var status={open:'<span class="badge badge-green">募集中</span>',ongoing:'<span class="badge badge-blue">進行中</span>'}[tc.status]||'';
+    return '<div class="tc-card'+(tc.featured?' featured':'')+'" onclick="showTournamentDetail('+tc.id+')">'+'<div class="tc-head"><div style="display:flex;align-items:center;gap:8px;margin-bottom:7px"><div style="width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;background:'+(g?g.bg:'#222')+'">'+(g?g.emoji:'🎮')+'</div><div style="font-size:11px;color:var(--text-3)">'+(g?g.title:'')+'</div>'+status+'</div><div class="tc-title">'+tc.title+'</div></div>'+'<div class="tc-body"><div style="display:flex;gap:5px;margin-bottom:8px"><span class="badge badge-purple">'+tc.format+'</span></div><div class="tc-stats"><div class="tc-stat"><div class="tc-stat-val">'+tc.entries+'</div><div class="tc-stat-lab">エントリー</div></div><div class="tc-stat"><div class="tc-stat-val">'+tc.cap+'</div><div class="tc-stat-lab">定員</div></div><div class="tc-stat"><div class="tc-stat-val">'+(tc.cap-tc.entries)+'</div><div class="tc-stat-lab">残り枠</div></div></div><div class="progress-wrap"><div class="progress-bar" style="width:'+pct+'%"></div></div></div>'+'<div class="tc-foot"><span style="font-size:11px;color:var(--text-3)">'+tc.date+'</span><span style="font-size:11px;color:var(--text-2)">主催: '+tc.org+'</span></div></div>';
+  }
+  document.getElementById('tcGrid').innerHTML=T.map(renderCard).join('');
+}
+function showTournamentDetail(id){
+  var tc=T.find(function(x){return x.id===id;});
+  if(!tc)return;
+  var gMap={};G.forEach(function(g){gMap[g.id]=g;});
+  var g=gMap[tc.gameId];
+  document.getElementById('tournamentListView').style.display='none';
+  document.getElementById('tournamentDetailView').style.display='block';
+  var entered=false;
+  document.getElementById('tournamentDetailContent').innerHTML='<div style="background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:16px">'+'<div style="background:'+(g?g.bg:'#222')+';height:120px;display:flex;align-items:center;justify-content:center;font-size:50px">'+(g?g.emoji:'🎮')+'</div>'+'<div style="padding:14px 20px;display:grid;grid-template-columns:repeat(4,1fr)">'+'<div style="text-align:center"><div style="font-size:20px;font-weight:700">'+tc.entries+'</div><div style="font-size:11px;color:var(--text-3)">エントリー</div></div>'+'<div style="text-align:center"><div style="font-size:20px;font-weight:700">'+tc.cap+'</div><div style="font-size:11px;color:var(--text-3)">定員</div></div>'+'<div style="text-align:center"><div style="font-size:14px;font-weight:700">'+tc.date+'</div><div style="font-size:11px;color:var(--text-3)">開催日</div></div>'+'<div style="text-align:center"><div style="font-size:13px;font-weight:700">'+tc.format+'</div><div style="font-size:11px;color:var(--text-3)">形式</div></div></div></div>'+'<div class="card"><div class="card-title">概要・ルール</div><div style="font-size:13px;color:var(--text-2);line-height:1.8">'+(tc.desc||'')+'</div></div>'+'<div class="card" style="margin-top:12px"><div class="card-title">賞品</div>'+(tc.prizes&&tc.prizes[0]?'<div class="prize-row prize-1"><span>優勝</span><span>'+tc.prizes[0]+'</span></div>':'')+(tc.prizes&&tc.prizes[1]?'<div class="prize-row prize-2"><span>準優勝</span><span>'+tc.prizes[1]+'</span></div>':'')+'<div class="notice notice-amber" style="margin-top:8px">参加費ゼロ・オープン懸賞として適法</div></div>'+'<div style="margin-top:12px"><button class="btn btn-green" id="entryBtn" onclick="doTournamentEntry()">エントリーする</button></div>';
+}
+function hideTournamentDetail(){document.getElementById('tournamentListView').style.display='block';document.getElementById('tournamentDetailView').style.display='none';}
+function doTournamentEntry(){var btn=document.getElementById('entryBtn');if(!btn||btn.dataset.done)return;btn.dataset.done='1';btn.textContent='エントリー済 ✓';btn.className='btn btn-sm';}
+function openGameDetail(id,defaultTab){
+  defaultTab=defaultTab||'review';
+  var g=G.find(function(x){return x.id===id;});if(!g)return;
+  var gRecruits=R.filter(function(r){return r.gameId===id;});
+  var gTournaments=T.filter(function(t){return t.gameId===id;});
+  var hero=document.getElementById('dpHero');
+  hero.style.background=g.bg;
+  hero.innerHTML='<span style="font-size:60px;position:relative;z-index:1">'+g.emoji+'</span><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,0.75))"></div><div style="position:absolute;bottom:12px;left:16px"><div style="font-size:19px;font-weight:700;color:#fff">'+g.title+'</div></div>';
+  var dpStarVal=0;
+  function renderReview(){
+    document.querySelectorAll('.dp-tab').forEach(function(t){t.classList.remove('active');});
+    document.getElementById('dpt-review').classList.add('active');
+    document.getElementById('dpContent').innerHTML='<div style="font-size:13px;color:var(--text-2);line-height:1.8;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">'+g.desc+'</div>'+'<div style="display:flex;align-items:center;gap:6px;margin-bottom:12px">'+starsHtml(g.score,16)+'<span style="font-size:16px;font-weight:700;color:var(--amber)">'+g.score.toFixed(1)+'</span><span style="font-size:12px;color:var(--text-3)">'+g.reviews+'件</span></div>'+'<div style="font-size:12px;font-weight:700;color:var(--text-3);margin-bottom:10px">コメント ('+g.comments.length+'件)</div>'+g.comments.map(function(c){return '<div class="comment-item"><div class="comment-user">'+c.user+'</div><div class="comment-text">'+c.text+'</div></div>';}).join('')+'<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)"><div style="font-size:12px;color:var(--text-2);margin-bottom:6px">コメントを書く</div><div class="star-pick" id="dpStars">'+'<span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span></div><textarea id="dpCommentText" style="width:100%;padding:9px 12px;border:1px solid var(--border-2);border-radius:var(--radius);font-size:13px;resize:vertical;min-height:70px;margin-top:8px;background:var(--card);color:var(--text);font-family:inherit"></textarea><div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="btn btn-green btn-sm" onclick="submitComment('+id+')">投稿</button></div></div>';
+    document.getElementById('dpStars').addEventListener('click',function(e){if(e.target.dataset.v){dpStarVal=parseInt(e.target.dataset.v);this.querySelectorAll('span').forEach(function(s,i){s.classList.toggle('lit',i<dpStarVal);});}});
+  }
+  function renderRecruit(){
+    document.querySelectorAll('.dp-tab').forEach(function(t){t.classList.remove('active');});
+    document.getElementById('dpt-recruit').classList.add('active');
+    document.getElementById('dpContent').innerHTML='<div style="margin-bottom:12px;display:flex;justify-content:space-between"><div style="font-size:13px;color:var(--text-2)">'+gRecruits.length+'件の募集</div><button class="btn btn-blue btn-sm" onclick="openModal(\'addRecruitModal\')">+ 募集する</button></div>'+gRecruits.map(function(r){return '<div style="background:var(--surface);border-radius:var(--radius);padding:12px;margin-bottom:8px;border:1px solid var(--border-2)"><div style="font-size:13px;font-weight:700;margin-bottom:6px">'+r.title+'</div><div style="font-size:11px;color:var(--text-3)">'+r.user+' · 空き'+(r.max-r.cur)+'枠</div></div>';}).join('')+(gRecruits.length===0?'<div style="padding:30px;text-align:center;color:var(--text-3)">このゲームの募集はまだありません</div>':'');
+  }
+  function renderTournament(){
+    document.querySelectorAll('.dp-tab').forEach(function(t){t.classList.remove('active');});
+    document.getElementById('dpt-tournament').classList.add('active');
+    document.getElementById('dpContent').innerHTML='<div style="margin-bottom:12px;display:flex;justify-content:space-between"><div style="font-size:13px;color:var(--text-2)">'+gTournaments.length+'件の大会</div><button class="btn btn-amber btn-sm" onclick="openModal(\'createTournamentModal\')">+ 大会を開く</button></div>'+gTournaments.map(function(tc){return '<div style="background:var(--surface);border-radius:var(--radius);padding:12px;margin-bottom:8px;border:1px solid var(--border-2);cursor:pointer" onclick="closeDetailPanel();nav(document.querySelectorAll(\'.nav-item\')[2],\'tournament\');setTimeout(function(){showTournamentDetail('+tc.id+');},50)"><div style="font-size:13px;font-weight:700">'+tc.title+'</div><div style="font-size:11px;color:var(--text-3)">'+tc.entries+'/'+tc.cap+'人 · '+tc.date+'</div></div>';}).join('')+(gTournaments.length===0?'<div style="padding:30px;text-align:center;color:var(--text-3)">このゲームの大会はまだありません</div>':'');
+  }
+  document.getElementById('dpTabs').innerHTML='<div class="dp-tab" id="dpt-review">レビュー</div><div class="dp-tab blue" id="dpt-recruit">マルチ募集 ('+gRecruits.length+')</div><div class="dp-tab amber" id="dpt-tournament">大会 ('+gTournaments.length+')</div>';
+  document.getElementById('dpt-review').onclick=renderReview;
+  document.getElementById('dpt-recruit').onclick=renderRecruit;
+  document.getElementById('dpt-tournament').onclick=renderTournament;
+  if(defaultTab==='recruit')renderRecruit();
+  else if(defaultTab==='tournament')renderTournament();
+  else renderReview();
+  document.getElementById('dpBg').classList.add('open');
+  document.getElementById('detailPanel').classList.add('open');
+}
+function closeDetailPanel(){document.getElementById('dpBg').classList.remove('open');document.getElementById('detailPanel').classList.remove('open');}
+function submitComment(id){var text=document.getElementById('dpCommentText').value.trim();if(!text)return;var g=G.find(function(x){return x.id===id;});if(!g)return;g.comments.unshift({user:'あなた',score:3,text:text});g.reviews++;openGameDetail(id,'review');}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-bg').forEach(function(el){el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});});
+function populateGameSelects(){['rGame','tGame'].forEach(function(sid){var sel=document.getElementById(sid);if(!sel)return;sel.innerHTML='<option value="">選択してください</option>'+G.map(function(g){return '<option value="'+g.id+'">'+g.title+'</option>';}).join('');});}
+function filterChip(el,type,val){el.closest('.filter-bar').querySelectorAll('.chip').forEach(function(c){if(c.getAttribute('onclick')&&c.getAttribute('onclick').includes("'"+type+"'"))c.classList.remove('sel');});el.classList.add('sel');if(type==='plat')filterPlat=val;else if(type==='genre')filterGenre=val;else if(type==='rGame')filterRGame=val;renderGames();renderRecruits();}
+function singleChip(el,grp){el.closest('[style],[class]').querySelectorAll('.chip').forEach(function(c){c.classList.remove('sel');});el.classList.add('sel');}
+function nav(el,pageId){document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});if(el)el.classList.add('active');document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.getElementById('page-'+pageId).classList.add('active');closeDetailPanel();}
+document.getElementById('addStars').addEventListener('click',function(e){if(e.target.dataset.v){addStarValG=parseInt(e.target.dataset.v);this.querySelectorAll('span').forEach(function(s,i){s.classList.toggle('lit',i<addStarValG);});}});
+function selEtag(el,cls){var v=el.dataset.v;if(activeEvalG===v){activeEvalG='';activeEvalClassG='';document.querySelectorAll('.etag').forEach(function(t){t.className='etag';});}else{activeEvalG=v;activeEvalClassG=cls;document.querySelectorAll('.etag').forEach(function(t){t.className='etag';});el.classList.add(cls);}}
+function submitGame(){var title=document.getElementById('fTitle').value.trim();if(!title){alert('タイトルを入力してください');return;}var plats=Array.from(document.querySelectorAll('#addGameModal [data-plat].sel')).map(function(x){return x.dataset.plat;});if(!plats.length){alert('プラットフォームを選択してください');return;}var bgs=['#1a2a1a','#1e1030','#2a1810','#0a1a2a','#1a0a20'];var emojis=['🎮','🕹️','⚡','🏆'];G.unshift({id:Date.now(),title:title,genre:document.getElementById('fGenre').value,plats:plats,desc:document.getElementById('fDesc').value||'みんなで語り合おう！',score:addStarValG||3,reviews:1,evalTag:activeEvalG||'良作',vibes:[],emoji:emojis[Math.floor(Math.random()*emojis.length)],bg:bgs[Math.floor(Math.random()*bgs.length)],comments:[]});closeModal('addGameModal');renderGames();}
+function submitRecruit(){var gid=parseInt(document.getElementById('rGame').value);var title=document.getElementById('rTitle').value.trim();if(!gid||!title){alert('ゲームとタイトルは必須です');return;}R.unshift({id:Date.now(),gameId:gid,title:title,modes:['カジュアル'],time:['今すぐ'],vc:'テキストのみOK',comment:document.getElementById('rComment').value||'',cur:parseInt(document.getElementById('rCur').value)||1,max:parseInt(document.getElementById('rMax').value)||2,user:'あなた',ago:'たった今'});closeModal('addRecruitModal');renderGames();renderRecruits();}
+function submitTournament(){var title=document.getElementById('tTitle').value.trim();if(!title){alert('タイトルを入力してください');return;}closeModal('createTournamentModal');alert('大会を公開しました！');renderTournaments();}
+function doFollow(btn){btn.textContent='フォロー中';btn.className='btn btn-xs';btn.style.color='var(--green-dark)';btn.onclick=null;}
+function copyLink(id){var el=document.getElementById(id);el.style.display='block';setTimeout(function(){el.style.display='none';},2200);}
+populateGameSelects();
+renderGames();
+renderRecruits();
+renderTournaments();
+</script>
 </body>
 </html>
