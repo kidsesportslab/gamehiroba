@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ゲーム広場</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Orbitron:wght@700;900&family=M+PLUS+1:wght@400;500;700&display=swap');
 :root{--accent:#00e5a0;--accent-dim:#00b87e;--bg:#0d1117;--bg-2:#161b22;--surface:#1f2937;--card:#1a2332;--text:#e6edf3;--text-2:#8b949e;--text-3:#484f58;--border:rgba(255,255,255,0.07);--border-2:rgba(255,255,255,0.13);--border-accent:rgba(0,229,160,0.35);--amber:#ffb300;--blue:#4da6ff;--red:#ff4757;--purple:#a855f7;--accent-glow:rgba(0,229,160,0.18);--amber-glow:rgba(255,179,0,0.15);--blue-glow:rgba(77,166,255,0.15);--amber-light:rgba(255,179,0,0.12);--blue-light:rgba(77,166,255,0.12);--purple-light:rgba(168,85,247,0.12);--green-light:rgba(0,229,160,0.12);--green-dark:#00b87e;--gray-100:#263040;--gray-600:#8b949e;--white:var(--card);--radius:8px;--radius-lg:12px;--radius-xl:18px;--shadow:0 2px 12px rgba(0,0,0,0.4);}
@@ -222,6 +223,143 @@
   </div>
 </div></div>
 <script>
+// ── SUPABASE SETUP ──
+const SUPABASE_URL = 'https://xjrnsfstqqpzpumivlfv.supabase.co';
+const SUPABASE_KEY = 'SUPABASE_ANON_KEY_PLACEHOLDER';
+const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+// ── DB HELPERS ──
+async function dbLoadGames() {
+  if (!sb) return null;
+  try {
+    const { data, error } = await sb.from('games').select('*').order('score', { ascending: false });
+    if (error) { console.error('Games load error:', error); return null; }
+    return data;
+  } catch(e) { console.error(e); return null; }
+}
+
+async function dbLoadRecruits() {
+  if (!sb) return null;
+  try {
+    const { data, error } = await sb.from('recruits').select('*').order('created_at', { ascending: false });
+    if (error) { console.error('Recruits load error:', error); return null; }
+    return data;
+  } catch(e) { console.error(e); return null; }
+}
+
+async function dbLoadTournaments() {
+  if (!sb) return null;
+  try {
+    const { data, error } = await sb.from('tournaments').select('*, games(id,title,emoji,bg_color)').order('created_at', { ascending: false });
+    if (error) { console.error('Tournaments load error:', error); return null; }
+    return data;
+  } catch(e) { console.error(e); return null; }
+}
+
+async function dbLoadComments(gameId) {
+  if (!sb) return [];
+  try {
+    const { data, error } = await sb.from('comments').select('*').eq('game_id', gameId).order('created_at', { ascending: false });
+    if (error) return [];
+    return data || [];
+  } catch(e) { return []; }
+}
+
+async function dbInsertGame(gameData) {
+  if (!sb) return false;
+  try {
+    const { error } = await sb.from('games').insert([gameData]);
+    return !error;
+  } catch(e) { return false; }
+}
+
+async function dbInsertComment(commentData) {
+  if (!sb) return false;
+  try {
+    const { error } = await sb.from('comments').insert([commentData]);
+    return !error;
+  } catch(e) { return false; }
+}
+
+async function dbInsertRecruit(recruitData) {
+  if (!sb) return false;
+  try {
+    const { error } = await sb.from('recruits').insert([recruitData]);
+    return !error;
+  } catch(e) { return false; }
+}
+
+async function dbInsertTournament(tournamentData) {
+  if (!sb) return false;
+  try {
+    const { error } = await sb.from('tournaments').insert([tournamentData]);
+    return !error;
+  } catch(e) { return false; }
+}
+
+async function dbInsertTournamentEntry(entryData) {
+  if (!sb) return false;
+  try {
+    const { error } = await sb.from('tournament_entries').insert([entryData]);
+    return !error;
+  } catch(e) { return false; }
+}
+
+// ── DB INIT: Load data on startup ──
+async function initFromDB() {
+  if (!sb) { console.log('Supabase not connected - using local data'); return; }
+  
+  // ゲームデータをDBから読み込み
+  const dbGames = await dbLoadGames();
+  if (dbGames && dbGames.length > 0) {
+    // DBのデータ形式をアプリの形式に変換
+    const converted = dbGames.map(g => ({
+      id: g.id,
+      title: g.title,
+      genre: g.genre,
+      plats: g.platforms || [],
+      desc: g.description || '',
+      score: parseFloat(g.score) || 3.0,
+      reviews: g.review_count || 0,
+      evalTag: g.eval_tag || '良作',
+      vibes: g.vibes || [],
+      emoji: g.emoji || '🎮',
+      bg: g.bg_color || '#1a2332',
+      comments: []
+    }));
+    G.length = 0;
+    converted.forEach(g => G.push(g));
+    console.log('Loaded ' + G.length + ' games from DB');
+  }
+
+  // 大会データをDBから読み込み
+  const dbTournaments = await dbLoadTournaments();
+  if (dbTournaments && dbTournaments.length > 0) {
+    const convertedT = dbTournaments.map(t => ({
+      id: t.id,
+      gameId: t.game_id,
+      title: t.title,
+      featured: t.featured || false,
+      status: t.status || 'open',
+      format: t.format || 'トーナメント',
+      entries: t.entry_count || 0,
+      cap: t.capacity || 16,
+      date: t.event_date || '',
+      org: t.organizer || '',
+      prizes: t.prizes || [],
+      desc: t.description || ''
+    }));
+    T.length = 0;
+    convertedT.forEach(t => T.push(t));
+    console.log('Loaded ' + T.length + ' tournaments from DB');
+  }
+
+  renderGames();
+  renderRecruits();
+  renderTournaments();
+}
+
+
 const G=[
   {id:1,title:'Hollow Knight',genre:'インディー',plats:['Steam','Switch'],desc:'虫たちが支配する崩壊した王国を探索する美麗な2Dアクション。高難易度ながら達成感が凄まじい。',score:4.8,reviews:342,evalTag:'神ゲー',vibes:['ソロ向け','決め時がない'],emoji:'🦋',bg:'#1a2a1a',comments:[{user:'ゲーマーK',score:5,text:'ラスボスまでの旅が最高すぎた。BGMが頭から離れない。'}]},
   {id:2,title:'Balatro',genre:'インディー',plats:['Steam','Switch'],desc:'トランプのポーカーとローグライクが融合した中毒性異常のデッキ構築ゲーム。一度始めると止まらない。',score:4.9,reviews:521,evalTag:'神ゲー',vibes:['ソロ向け','決め時がない'],emoji:'🃃',bg:'#1e1030',comments:[{user:'カードゲーム廃人',score:5,text:'最高です。'}]},
@@ -365,6 +503,8 @@ function runAIMatching(){var btn=document.querySelector('#aiMatchModal .btn-gree
 function runPrizeLegalCheck(){var btn=document.getElementById('aiPrizeBtn');var resultEl=document.getElementById('aiPrizeResult');if(!btn||!resultEl)return;var fee=document.querySelector('#tFeeGrp .chip.sel');var feeText=fee?fee.textContent:'無料';btn.disabled=true;btn.textContent='AIが判断中...';resultEl.style.display='none';var verdict,level,reason;if(feeText.indexOf('無料')!==-1){verdict='合法';level='safe';reason='参加費なし・現金賞品なしの構成は景品表示法上問題ありません。';}else{verdict='要注意';level='warn';reason='参加費を徴収する場合は法的リスクが高まります。法的アドバイザーへの相談を推奨します。';}var cols={safe:['#2d5a0f','#d4edba','#4a8c1c'],warn:['#7a4d07','#fdecc8','#c07a10']};var col=cols[level];resultEl.style.display='block';resultEl.innerHTML='<div style="border:1.5px solid '+col[2]+';border-radius:var(--radius);overflow:hidden"><div style="background:'+col[2]+';padding:10px 14px"><div style="font-size:13px;font-weight:700;color:#fff">'+(level==='safe'?'✅ ':'⚠️ ')+verdict+'</div></div><div style="background:'+col[1]+';padding:12px 14px"><div style="font-size:12px;color:'+col[0]+'">'+reason+'</div></div></div>';btn.disabled=false;btn.textContent='AIで景品の合法性をチェックする';}
 function renderRecommended(){var gMap={};G.forEach(function(g){gMap[g.id]=g;});var myGames=['Hollow Knight','Balatro'];var scored=T.map(function(tc){var g=gMap[tc.gameId];var score=0;var reasons=[];if(myGames.indexOf(g&&g.title)!==-1){score+=40;reasons.push('得意ゲーム');}if(tc.featured){score+=15;reasons.push('注目');}if(tc.entries/tc.cap<0.7){score+=10;reasons.push('枠あり');}return{id:tc.id,title:tc.title,entries:tc.entries,cap:tc.cap,recScore:score,recReasons:reasons,game:g};}).filter(function(x){return x.recScore>0;}).sort(function(a,b){return b.recScore-a.recScore;});var recEl=document.getElementById('recommendedTournaments');if(!recEl)return;if(!scored.length){recEl.innerHTML='<div style="font-size:12px;color:var(--text-3)">参加履歴が増えると精度が上がります</div>';return;}var html='';for(var i=0;i<Math.min(3,scored.length);i++){var tc=scored[i];html+='<div onclick="showTournamentDetail('+tc.id+')" style="background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius);padding:11px;cursor:pointer"><div style="display:flex;align-items:center;gap:8px;margin-bottom:7px"><div style="font-size:20px">'+(tc.game?tc.game.emoji:'🎮')+'</div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+tc.title+'</div><div style="font-size:10px;color:var(--text-3)">'+(tc.game?tc.game.title:'')+'</div></div></div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">'+tc.recReasons.map(function(r){return'<span style="font-size:10px;background:var(--accent-glow);color:var(--accent);padding:1px 6px;border-radius:3px;font-weight:700">'+r+'</span>';}).join('')+'</div><div style="display:flex;justify-content:space-between"><div style="font-size:11px;color:var(--text-3)">'+tc.entries+'/'+tc.cap+'人</div><div style="font-size:11px;color:var(--accent);font-weight:700">マッチ度 '+tc.recScore+'%</div></div><div style="background:var(--surface-2);border-radius:3px;height:3px;margin-top:6px;overflow:hidden"><div style="height:100%;width:'+tc.recScore+'%;background:linear-gradient(90deg,var(--accent),var(--blue))"></div></div></div>';}recEl.innerHTML=html;}
 renderRecommended();
+// Supabase DB初期化
+if(window.supabase && typeof initFromDB === 'function'){initFromDB();}
 
 </script>
 
